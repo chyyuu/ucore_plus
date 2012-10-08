@@ -62,6 +62,14 @@ struct fs {
     void (*fs_cleanup)(struct fs *fs);
 };
 
+struct file_system_type
+{
+    const char *name;
+    int (*mount)(const char *devname);
+    list_entry_t file_system_type_link;
+};
+
+
 #define __fs_type(type)                                             fs_type_##type##_info
 
 #define check_fs_type(fs, type)                                     ((fs)->fs_type == __fs_type(type))
@@ -205,6 +213,13 @@ int vfs_add_dev(const char *devname, struct inode *devnode, bool mountable);
 int vfs_mount(const char *devname, int (*mountfunc)(struct device *dev, struct fs **fs_store));
 int vfs_unmount(const char *devname);
 int vfs_unmount_all(void);
+
+void file_system_type_list_init(void);
+int register_filesystem(const char *name, int (*mount)(const char *devname));
+int unregister_filesystem(const char *name);
+
+int do_mount(const char *devname, const char *fsname);
+int do_umount(const char *devname);
 
 #endif /* !__KERN_FS_VFS_VFS_H__ */
 

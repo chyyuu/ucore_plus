@@ -327,6 +327,54 @@ sys_mkfifo(uint32_t arg[]) {
     return sysfile_mkfifo(name, open_flags);
 }
 
+static uint32_t
+sys_init_module(uint32_t arg[]) {
+    const char *name = (const char *)arg[0];
+    return do_init_module(name);
+}
+
+static uint32_t
+sys_cleanup_module(uint32_t arg[]) {
+    const char *name = (const char *)arg[0];
+    return do_cleanup_module(name);
+}
+
+static uint32_t
+sys_list_module(uint32_t arg[]) {
+    print_loaded_module();
+    return 0;
+}
+
+static uint32_t
+sys_mod_add(uint32_t arg[]) {
+    int a = (int)arg[0];
+    int b = (int)arg[1];
+    return do_mod_add(a, b);
+}
+
+static uint32_t
+sys_mod_mul(uint32_t arg[]) {
+    int a = (int)arg[0];
+    int b = (int)arg[1];
+    return do_mod_mul(a, b);
+}
+
+static uint32_t
+sys_mount(uint32_t arg[]) {
+    const char *source = (const char *)arg[0];
+    const char *target = (const char *)arg[1];
+    const char *filesystemtype = (const char *)arg[2];
+    unsigned long mountflags = (unsigned long)arg[3];
+    const void *data = (const void *)arg[4];
+    return do_mount(source, filesystemtype);
+}
+
+static uint32_t
+sys_umount(uint32_t arg[]) {
+    const char *target = (const char *)arg[0];
+    return do_umount(target);
+}
+
 static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_exit]              sys_exit,
     [SYS_fork]              sys_fork,
@@ -374,6 +422,13 @@ static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_dup]               sys_dup,
     [SYS_pipe]              sys_pipe,
     [SYS_mkfifo]            sys_mkfifo,
+    [SYS_init_module]       sys_init_module,
+    [SYS_cleanup_module]    sys_cleanup_module,
+    [SYS_list_module]       sys_list_module,
+    [SYS_mod_add]           sys_mod_add,
+    [SYS_mod_mul]           sys_mod_mul,
+    [SYS_mount]             sys_mount,
+    [SYS_umount]            sys_umount
 };
 
 #define NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))
