@@ -55,6 +55,7 @@
 #define SYS_pipe            140
 #define SYS_mkfifo          141
 
+
 /* chenyh 2012/7 */
 #define SYS_ioctl           142
 #define SYS_linux_mmap      143
@@ -64,6 +65,15 @@
 #define SYS_linux_sigprocmask   147
 #define SYS_linux_sigsuspend   148
 #define SYS_linux_sigreturn    149
+
+/* changlan */
+#define SYS_init_module     200
+#define SYS_cleanup_module  201
+#define SYS_list_module     202
+#define SYS_mod_add         210
+#define SYS_mod_mul         211
+#define SYS_mount           212
+#define SYS_umount			213
 
 /* SYS_fork flags */
 #define CLONE_VM             0x00000100

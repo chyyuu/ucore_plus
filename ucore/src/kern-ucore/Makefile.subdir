@@ -23,6 +23,9 @@ $(BUILTIN_O):
 	$(Q)touch $@
 endif
 
+$(OBJPATH)/%.ko: %.c
+	@echo CC $<
+	$(Q)$(TARGET_CC) $(TARGET_CFLAGS) -c -o $@ $<
 
 $(OBJPATH)/%.o: %.c
 	@echo CC $<

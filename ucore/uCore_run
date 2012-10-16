@@ -71,13 +71,12 @@ case $UCONFIG_ARCH in
         if [[ $TEST_MODE = y ]]; then
             EXTRA_OPT="-S -display none"
         else
-            EXTRA_OPT="-monitor stdio"
+            EXTRA_OPT="-serial stdio"
         fi
         exec $QEMU -m 128 \
             -hda $BUILD_DIR/kernel.img \
             -drive file=$BUILD_DIR/swap.img,media=disk,cache=writeback \
             -drive file=$BUILD_DIR/sfs.img,media=disk,cache=writeback \
-            -s -serial file:$BUILD_DIR/serial.log \
             $EXTRA_OPT
         ;;
 esac

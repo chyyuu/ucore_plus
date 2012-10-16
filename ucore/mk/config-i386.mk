@@ -1,6 +1,6 @@
-QEMU            		?= qemu
+QEMU            		?= qemu-system-i386
 export HOST_CC_PREFIX	?=
-export TARGET_CC_PREFIX	?= 
+export TARGET_CC_PREFIX	?= i386-elf-
 export TARGET_CC_FLAGS_COMMON	?=	-m32 -ffreestanding \
 									-mno-red-zone \
 									-mno-mmx -mno-sse -mno-sse2 \

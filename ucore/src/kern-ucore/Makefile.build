@@ -17,7 +17,7 @@ export KTREE_OBJ_ROOT
 
 KERN_INCLUDES :=../glue-kern/arch/${ARCH} glue-ucore glue-ucore/libs \
 libs syscall debug driver mm sync schedule process fs \
-fs/swap fs/vfs fs/pipe fs/sfs fs/devs module module/include 
+fs/swap fs/vfs fs/pipe fs/sfs fs/devs module module/include kmodule
 
 ifdef UCONFIG_HAVE_LINUX_DDE_BASE
 KERN_INCLUDES += module/include

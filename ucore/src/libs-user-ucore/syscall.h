@@ -2,6 +2,9 @@
 #define __USER_LIBS_SYSCALL_H__
 
 #include <types.h>
+#ifndef __user
+#define __user
+#endif
 
 int sys_exit(int error_code);
 int sys_fork(void);
@@ -58,6 +61,15 @@ int sys_getdirentry(int fd, struct dirent *dirent);
 int sys_dup(int fd1, int fd2);
 int sys_pipe(int *fd_store);
 int sys_mkfifo(const char *name, uint32_t open_flags);
+
+int sys_init_module(void __user *umod, unsigned long len, const char __user *uargs);
+int sys_cleanup_module(const char __user *name);
+int sys_list_module();
+int sys_mod_add(int, int);
+int sys_mod_mul(int, int);
+
+int sys_mount(const char *source, const char *target, const char* filesystemtype, unsigned long mountflags, const void *data);
+int sys_umount(const char *target);
 
 int sys_ioctl(int d, int request, unsigned long data);
 

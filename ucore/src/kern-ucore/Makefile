@@ -2,7 +2,7 @@
 #dirs-y += arch/$(ARCH)
 
 #dirs-$(UCONFIG_LINUX_DDE_BASE) += module
-dirs-y := schedule syscall fs process mm libs glue-ucore sync
+dirs-y := schedule syscall fs process mm libs glue-ucore sync kmodule
 
 dirs-y += arch/$(ARCH)
 

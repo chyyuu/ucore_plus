@@ -329,19 +329,21 @@ sys_mkfifo(uint32_t arg[]) {
 
 static uint32_t
 sys_init_module(uint32_t arg[]) {
-    const char *name = (const char *)arg[0];
-    return do_init_module(name);
+    void __user *umod = (void __user *)arg[0];
+	unsigned long len = (unsigned long)arg[1];
+	const char *urgs = (const char *)arg[2];
+    return do_init_module(umod, len, urgs);
 }
 
 static uint32_t
 sys_cleanup_module(uint32_t arg[]) {
-    const char *name = (const char *)arg[0];
+    const char __user *name = (const char __user *)arg[0];
     return do_cleanup_module(name);
 }
 
 static uint32_t
 sys_list_module(uint32_t arg[]) {
-    print_loaded_module();
+    print_modules();
     return 0;
 }
 

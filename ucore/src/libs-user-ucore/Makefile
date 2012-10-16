@@ -5,7 +5,7 @@ ULIB_A := $(ULIB_OBJ_ROOT)/ulib.a
 
 TARGET_CFLAGS := -I. -Icommon -Iarch/$(ARCH) -nostdinc -nostdlib -fno-builtin
 obj-y := dir.o file.o malloc.o panic.o signal.o spipe.o \
-				stdio.o string.o syscall.o thread.o ulib.o umain.o
+				stdio.o string.o syscall.o thread.o ulib.o umain.o mod.o
 obj-y += common/hash.o common/rand.o common/printfmt.o \
 				common/string.o
 
