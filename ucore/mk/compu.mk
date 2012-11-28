@@ -1,4 +1,4 @@
-CC      := i386-elf-gcc ${TARGET_CC_FLAGS_COMMON} ${TARGET_CC_FLAGS_USER}
-LD		:= i386-elf-ld ${TARGET_LD_FLAGS}
+CC      := ${TARGET_CC_PREFIX}gcc ${TARGET_CC_FLAGS_COMMON} ${TARGET_CC_FLAGS_USER}
+LD		:= ${TARGET_CC_PREFIX}ld ${TARGET_LD_FLAGS}
 
 include ${T_BASE}/mk/compopt.mk

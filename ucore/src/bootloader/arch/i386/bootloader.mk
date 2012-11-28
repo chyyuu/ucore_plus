@@ -12,7 +12,6 @@ ${T_OBJ}/bootsect: ${T_OBJ}/bootloader ${HT_SIGN}
 	@${HT_SIGN} $@.original $@
 
 ${T_OBJ}/bootloader: ${OBJFILES}
-	@echo LD: ${OBJFILES} $@
-	@echo ${CC}
-	${V}i386-elf-ld -N -e start -Tarch/${ARCH}/bootloader.ld -o$@ ${OBJFILES}
-	${V}i386-elf-strip -g -R .eh_frame $@
+	@echo LD $@
+	${V}${LD} -N -e start -Tarch/${ARCH}/bootloader.ld -o$@ ${OBJFILES}
+	${V}${STRIP} -g -R .eh_frame $@

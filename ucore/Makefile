@@ -36,7 +36,7 @@ MAKEFLAGS += -rR --no-print-directory
 #### CROSS COMPILE HERE ####
 ARCH ?= $(patsubst "%",%,$(UCONFIG_ARCH))
 BOARD ?= default
-CROSS_COMPILE := i386-elf-
+CROSS_COMPILE ?= $(UCONFIG_CROSS_COMPILE)
 
 export CONFIG_SHELL quiet Q KBUILD_VERBOSE
 export ARCH CROSS_COMPILE
@@ -149,7 +149,6 @@ $(SFSIMG_FILE): $(TOOLS_MKSFS) userlib userapp FORCE | $(OBJPATH_ROOT)
 	@echo Making $@
 	@mkdir -p $(TMPSFS)
 	@cp -r $(OBJPATH_ROOT)/user-ucore/bin $(TMPSFS)
-	@cp -r $(OBJPATH_ROOT)/user-ucore/lib $(TMPSFS)
 ifneq ($(UCORE_TEST),)
 	@cp -r $(OBJPATH_ROOT)/user-ucore/testbin $(TMPSFS)
 endif
