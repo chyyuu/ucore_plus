@@ -20,8 +20,27 @@
 #define __must_be_array(a) \
 	BUILD_BUG_ON_ZERO(__builtin_types_compatible_p(typeof(a), typeof(&a[0])))
 
-#define MOD_INIT_MODULE "init_module"
-#define MOD_CLEANUP_MODULE "cleanup_module"
+#define __init          __section(.init.text)
+#define __initdata      __section(.init.data)
+#define __exitdata      __section(.exit.data)
+#define __exit_call     __used __section(.exitcall.exit)
+#define __exit          __section(.exit.text)
+
+typedef int (*initcall_t)(void);
+typedef void (*exitcall_t)(void);
+
+#define __section(S) __attribute__((__section__(#S)))
+
+#define __define_initcall(level,fn) \
+	static initcall_t __initcall_##fn __used \
+	__attribute__((__section__(".initcall" level ".init"))) = fn
+
+#define __initcall(fn) __define_initcall("1", fn)
+#define __exitcall(fn) static exitcall_t __exitcall_##fn __exit_call = fn
+
+#define module_init(x) __initcall(x)
+#define module_exit(x) __exitcall(x)
+
 
 #define MOD_ADD "module_func_add"
 #define MOD_MUL "module_func_mul"
@@ -54,6 +73,15 @@ struct modversion_info
 struct mod_arch_specific
 {
 };
+
+
+
+/*
+ * We don't need these. They are obsolete.
+
+extern int init_module(void);
+extern void cleanup_module(void);
+ */
 
 #define __EXPORT_SYMBOL(sym, sec) 				\
 	extern typeof(sym) sym; 			\
@@ -248,9 +276,6 @@ const struct exception_table_entry *search_module_extables_(unsigned long addr);
 extern void print_modules(void);
 
 void mod_init();
-
-void register_mod_add(func_add_t f);
-void unregister_mod_add();
 
 int do_init_module(void __user *umod, unsigned long len, const char __user *uargs);
 int do_cleanup_module(const char __user *name_user);

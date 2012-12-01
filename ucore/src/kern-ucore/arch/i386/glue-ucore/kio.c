@@ -6,6 +6,7 @@
 #include <spinlock.h>
 #include <stdarg.h>
 #include <unistd.h>
+#include <mod.h>
 
 /* *
  * cputch - writes a single character @c to stdout, and it will
@@ -55,3 +56,4 @@ kprintf(const char *fmt, ...) {
     va_end(ap);
     return cnt;
 }
+EXPORT_SYMBOL(kprintf);

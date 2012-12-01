@@ -1,25 +1,34 @@
 #include <kio.h>
 #include <mod.h>
 
-int test;
-int global;
+extern int (*add_func)(int x, int y);
 
-int add(int a, int b, int *c) {
-    *c = a + b;
+int add(int a, int b) {
+    return a + b;
+}
+
+static __init int add_init() {
+    kprintf("add_init: Hello world!\n");
+    add_func = &add;
     return 0;
 }
 
-void init_module() {
-    kprintf("[ MM ] init mod-add\n");
-    register_mod_add(add);
-    kprintf("[ MM ] init mod-add done\n");
-    test = 1;
-    global = 10 + test;
-    kprintf("test: %d, global: %d\n", test, global);
+static __exit void add_exit() {
+    add_func = NULL;
+    kprintf("add_init: Goodbye, cruel world.\n");
 }
 
-void cleanup_module() {
-    kprintf("[ MM ] cleanup module mod-add\n");
-    unregister_mod_add();
-    kprintf("[ MM ] cleanup module mod-add done\n");
-}
+module_init(add_init);
+module_exit(add_exit);
+
+struct module __this_module
+__attribute__((section(".gnu.linkonce.this_module"))) = {
+    .name = "mod-add",
+    .init = add_init,
+    .exit = add_exit,
+};
+
+static const char __module_depends[]
+__used
+__attribute__((section(".modinfo"))) = 
+"depends=";

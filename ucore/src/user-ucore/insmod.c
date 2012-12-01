@@ -43,7 +43,7 @@ void load_mod(const char *name)
 	int ret;
 	fd = open(name, O_RDONLY);
 	if (fd < 0) {
-		cprintf("cannot find kobject file. %s\n");
+		cprintf("cannot find kobject file. %s\n", name);
 		return;
 	}
 	struct stat mod_stat;
@@ -62,6 +62,8 @@ void load_mod(const char *name)
 	int copied = read(fd, buffer, mod_stat.st_size);
     cprintf("module size: %d, mem addr: %x\n", copied, buffer);
 	ret = init_module(buffer, copied, NULL);
+    if (ret < 0)
+        cprintf("insmod failed.\n");
 	free(buffer);
 }
 	
@@ -69,10 +71,8 @@ void load_mod(const char *name)
 void load(const char *name, int size) {
     if (in_short(name, size)) {
         snprintf(path, size + KERN_MODULE_ADDITIONAL_LEN + 1, KERN_MODULE_PREFIX"%s"KERN_MODULE_SUFFIX, name);
-        write(1, LOADING, strlen(LOADING));
-        write(1, path, strlen(path));
-        write(1, "\n", 1);
-        load_mod(name);
+        cprintf(LOADING "%s\n", path);
+        load_mod(path);
     } else {
         load_mod(name);
     }
