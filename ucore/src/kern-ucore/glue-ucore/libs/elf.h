@@ -60,6 +60,7 @@
 #define EM_TI_C6000 140 /* TI C6X DSPs */
 #define EM_FRV      0x5441  /* Fujitsu FR-V */
 #define EM_AVR32    0x18ad  /* Atmel AVR32 */
+#define EM_ARM      40
 
 #define STB_LOCAL 0
 #define STB_GLOBAL 1
@@ -188,9 +189,13 @@ struct proghdr {
 
 #else /* __UCORE_64__ not defined */
 
+#ifndef ARCH_ARM
 #define elf_check_arch(x) \
 	(((x)->e_machine == EM_386) || ((x)->e_machine == EM_486))
-
+#else
+#define elf_check_arch(x) \
+    (((x)->e_machine == EM_ARM))
+#endif
 
 struct elfhdr {
     uint32_t e_magic;     // must equal ELF_MAGIC
@@ -274,7 +279,16 @@ struct symtab_s {
 #define R_386_RELATIVE  8
 #define R_386_GOTOFF    9
 #define R_386_GOTPC     10
-#define R_386_NUM       11
+#define R_386_NUM       11 
+#define R_ARM_NONE              0 
+#define R_ARM_PC24              1 
+#define R_ARM_ABS32             2
+#define R_ARM_CALL              28
+#define R_ARM_JUMP24            29
+#define R_ARM_V4BX              40
+#define R_ARM_PREL31            42
+#define R_ARM_MOVW_ABS_NC       43
+#define R_ARM_MOVT_ABS          44
 
 #endif /* __UCORE_64__ */
 
