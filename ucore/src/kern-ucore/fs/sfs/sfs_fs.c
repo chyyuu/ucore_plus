@@ -113,7 +113,7 @@ sfs_cleanup(struct fs *fs) {
     return 0;
 }
 
-static void
+static int
 sfs_unmount(struct fs *fs) {
     struct sfs_fs *sfs = fsop_info(fs, sfs);
     uint32_t blocks = sfs->super.blocks, unused_blocks = sfs->super.unused_blocks;
@@ -128,6 +128,7 @@ sfs_unmount(struct fs *fs) {
     if (ret != 0) {
         warn("sfs: sync error: '%s': %e.\n", sfs->super.info, ret);
     }
+    return ret;
 }
 
 static int

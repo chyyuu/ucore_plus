@@ -59,7 +59,7 @@ struct fs {
     int (*fs_sync)(struct fs *fs);
     struct inode *(*fs_get_root)(struct fs *fs);
     int (*fs_unmount)(struct fs *fs);
-    void (*fs_cleanup)(struct fs *fs);
+    int (*fs_cleanup)(struct fs *fs);
 };
 
 struct file_system_type

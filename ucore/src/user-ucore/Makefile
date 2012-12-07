@@ -14,7 +14,7 @@ USER_LIB := $(USER_LIB_OBJDIR)/ulib.a
 BIN := $(USER_OBJ_ROOT)/bin
 TESTBIN := $(USER_OBJ_ROOT)/testbin
 
-USER_APPLIST:= pwd cat sh ls cp echo link mkdir rename unlink lsmod insmod rmmod test_mod_add test_mod_mul
+USER_APPLIST:= pwd cat sh ls cp echo link mkdir rename unlink lsmod insmod rmmod test_mod_add test_mod_mul mount umount
 ifneq ($(UCORE_TEST),)
 USER_TESTLIST := $(basename $(wildcard tests/*.c))
 USER_TESTLIST += $(basename $(wildcard tests/arch/$(ARCH)/*.c))

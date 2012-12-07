@@ -25,6 +25,7 @@ void
 vfs_init(void) {
     sem_init(&bootfs_sem, 1);
     vfs_devlist_init();
+    file_system_type_list_init();
 }
 
 static void

@@ -35,9 +35,10 @@ pipe_unmount(struct fs *fs) {
     return -E_INVAL;
 }
 
-static void
+static int
 pipe_cleanup(struct fs *fs) {
     /* do nothing */
+    return 0;
 }
 
 static void
