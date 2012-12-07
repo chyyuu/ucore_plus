@@ -1,0 +1,1 @@
+obj-y := entry.o proc.o signal.o switch.o

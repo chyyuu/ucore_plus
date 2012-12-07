@@ -7,4 +7,16 @@ config SWAP
 		Enable support for providing more virtual memory than actual RAM
 		present by using disk storage.
 
+choice
+  prompt "Heap"
+  default HEAP_SLAB
+
+config HEAP_SLAB
+  bool "SLAB"
+
+config HEAP_SLOB
+  bool "SLOB"
+
+endchoice
+
 endmenu

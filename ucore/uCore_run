@@ -16,7 +16,7 @@ while getopts "hd:t" opt; do
             echo "  -t                             run in background for test"
             echo "                                 i.e. do not use stdio or open SDL window"
             echo ""
-            echo "Supported architectures: i386, arm(goldfishv7)"
+            echo "Supported architectures: i386, arm(goldfishv7), x86_64"
             echo ""
             echo "Report bugs to https://github.com/chyyuu/ucore_plus/issues"
             exit 0
@@ -77,6 +77,24 @@ case $UCONFIG_ARCH in
             -hda $BUILD_DIR/kernel.img \
             -drive file=$BUILD_DIR/swap.img,media=disk,cache=writeback \
             -drive file=$BUILD_DIR/sfs.img,media=disk,cache=writeback \
+            $EXTRA_OPT
+        ;;
+    x86_64)
+        QEMU=qemu
+        which qemu-system-x86_64 > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            QEMU=qemu-system-x86_64
+        fi
+        if [[ $TEST_MODE = y ]]; then
+            EXTRA_OPT="-S -display none"
+        else
+            EXTRA_OPT="-monitor stdio"
+        fi
+        exec $QEMU -smp 4 -m 512 \
+            -hda $BUILD_DIR/kernel.img \
+            -drive file=$BUILD_DIR/swap.img,media=disk,cache=writeback \
+            -drive file=$BUILD_DIR/sfs.img,media=disk,cache=writeback \
+            -s -serial file:$BUILD_DIR/serial.log \
             $EXTRA_OPT
         ;;
 esac

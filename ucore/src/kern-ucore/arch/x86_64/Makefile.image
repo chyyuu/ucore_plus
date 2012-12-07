@@ -1,0 +1,75 @@
+ifneq ($(MAKECMDGOALS),clean)
+include $(KCONFIG_AUTOCONFIG)
+endif
+
+BLTREE = $(TOPDIR)/src/bootloader
+SVTREE = $(TOPDIR)/src/supervisor
+
+KERNEL_IMG := $(OBJPATH_ROOT)/kernel.img
+KERNEL_BIN := $(KTREE_OBJ_ROOT)/kernel.bin
+KERNEL_ELF := $(KTREE_OBJ_ROOT)/kernel-$(ARCH).elf
+BOOTSECT   := $(OBJPATH_ROOT)/bootloader/bootsect
+SV_ELF     := $(OBJPATH_ROOT)/supervisor/supervisor
+SV_SVSYM   := $(KTREE_OBJ_ROOT)/svsym.o
+SV_SVSYM_S := $(KTREE_OBJ_ROOT)/kern-svsym.S
+SV_SVSYM_O := $(KTREE_OBJ_ROOT)/kern-svsym.S.o
+BOOTINFO_O := $(OBJPATH_ROOT)/bootinfo.o
+BOOTINFO_S := $(TOPDIR)/src/glue-kern/arch/x86_64/bootinfo.S
+LINK_FILE_IN	:= $(KTREE)/arch/${ARCH}/ucore.ld.in
+LINK_FILE     := $(KTREE_OBJ_ROOT)/arch/$(ARCH)/ucore.ld
+SEDFLAGS	= s/TEXT_START/$(UCONFIG_KERNEL_BASE)/
+
+$(KERNEL_IMG): $(BOOTSECT) $(KERNEL_BIN) $(SV_ELF)
+	@echo Making $@
+	$(Q)dd if=/dev/zero of=$@ count=10000
+	$(Q)dd if=$(BOOTSECT) of=$@ conv=notrunc
+	$(Q)dd if=$(KERNEL_BIN) of=$@ seek=1 conv=notrunc
+	${Q}dd if=${SV_ELF} of=$@ seek=$(shell echo $(shell cat ${OBJPATH_ROOT}/kern-sect_size) + 1 | bc) conv=notrunc
+
+$(KERNEL_BIN): $(KERNEL_ELF)
+	@echo OBJCOPY $@
+	$(Q)$(TARGET_OBJCOPY) -S -O binary $^ $@
+	@T_OBJ=$(OBJPATH_ROOT) sh $(TOPDIR)/misc/kerninfo.sh
+
+$(KERNEL_ELF): $(LINK_FILE) $(KERNEL_BUILTIN) $(SV_SVSYM_O) $(BOOTINFO_O) $(RAMDISK_OBJ)
+	@echo Linking uCore
+	$(Q)$(TARGET_LD) $(TARGET_LDFLAGS) -T $(LINK_FILE) $(KERNEL_BUILTIN) $(SV_SVSYM_O) $(BOOTINFO_O) $(RAMDISK_OBJ) -o $@
+
+$(LINK_FILE): $(LINK_FILE_IN) $(KCONFIG_AUTOCONFIG)
+	@echo "creating linker script"
+	@sed  "$(SEDFLAGS)" < $< > $@
+
+$(BOOTSECT): $(OBJPATH_ROOT) $(KERNEL_BIN)
+	$(Q)$(MAKE) -C $(BLTREE) -f $(BLTREE)/Makefile all
+
+$(SV_SVSYM_O): $(SV_SVSYM_S)
+	@echo CC $@
+	$(Q)$(TARGET_CC) $(TARGET_CFLAGS) $< -c -o $@
+	$(Q)$(TARGET_STRIP) -x $@
+
+$(SV_SVSYM_S): $(SV_SVSYM)
+	@echo GEN $@
+	$(Q)echo ".data" > $@
+	$(Q)echo ".align 8" >> $@
+	$(Q)objdump -t $< -j .text -j .rodata -j .data -j .bss \
+		| sed -n -e 's/^\([0-9a-f][0-9a-f]*\).* \([a-zA-Z0-9_][a-zA-Z0-9_]*\)$$/\2_ptr: .quad 0x\1/gp' \
+		| sed -e 's/__TO_EXPORT_\([a-zA-Z0-9_][a-zA-Z0-9_]*\).*/.global \1/g' >> $@
+
+$(SV_SVSYM): $(SV_ELF)
+	$(Q)$(TARGET_OBJCOPY) --extract-symbol $< $@
+	$(Q)$(TARGET_STRIP) -x $@
+
+$(SV_ELF): FORCE
+	$(Q)$(MAKE) -C $(SVTREE) -f $(SVTREE)/Makefile all
+
+$(BOOTINFO_O): $(BOOTINFO_S)
+	@echo CC $@
+	$(Q)$(TARGET_CC) $(TARGET_CFLAGS) $< -c -o $@
+
+.PHONY: all clean FORCE
+all: $(KERNEL_IMG)
+
+FORCE:
+
+clean:
+	rm -f $(KERNEL_ELF) $(LINK_FILE)

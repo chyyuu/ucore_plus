@@ -40,9 +40,9 @@ sys_wait(uint64_t arg[]) {
 static uint64_t
 sys_exec(uint64_t arg[]) {
     const char *name = (const char *)arg[0];
-    int argc = (int)arg[1];
-    const char **argv = (const char **)arg[2];
-    return do_execve(name, argc, argv);
+    const char **argv = (const char **)arg[1];
+    const char **envp = (const char **)arg[2];
+    return do_execve(name, argv, envp);
 }
 
 static uint64_t
@@ -307,7 +307,7 @@ static uint64_t
 sys_getdirentry(uint64_t arg[]) {
     int fd = (int)arg[0];
     struct dirent *direntp = (struct dirent *)arg[1];
-    return sysfile_getdirentry(fd, direntp);
+    return sysfile_getdirentry(fd, direntp, NULL);
 }
 
 static uint64_t

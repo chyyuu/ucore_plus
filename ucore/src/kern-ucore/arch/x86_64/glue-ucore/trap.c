@@ -291,3 +291,8 @@ trap_init_ap(void)
 
 	intr_handler_set(IRQ_OFFSET + IRQ_TIMER, trap);
 }
+
+int ucore_in_interrupt()
+{
+	return 0;
+}

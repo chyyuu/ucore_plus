@@ -8,12 +8,12 @@ DEPFILES := $(OBJFILES:.o=.d)
 
 T_CC_ALL_FLAGS ?= ${T_CC_BASE_FLAGS} ${T_CC_OPT_FLAGS} ${T_CC_DEBUG_FLAGS} ${T_CC_FLAGS}
 
-${T_OBJ}/${MOD}-%.S.d: ${T_OBJ}
+${T_OBJ}/${MOD}-%.S.d: | ${T_OBJ}
 	@echo DEP $(call E_DECODE,$*).S
 	${V}${CC} -D__ASSEMBLY__ -MM ${T_CC_ALL_FLAGS} -MT $(@:.d=.o) $(call E_DECODE,$*).S -o$@
 	${V}echo "$(@:.d=.o): $(call E_DECODE,$*).S" >> $@
 
-${T_OBJ}/${MOD}-%.c.d: ${T_OBJ}
+${T_OBJ}/${MOD}-%.c.d: | ${T_OBJ}
 	@echo DEP $(call E_DECODE,$*).c
 	${V}${CC} -MM ${T_CC_ALL_FLAGS} -MT $(@:.d=.o) $(call E_DECODE,$*).c -o$@
 	${V}echo "$(@:.d=.o): $(call E_DECODE,$*).c" >> $@

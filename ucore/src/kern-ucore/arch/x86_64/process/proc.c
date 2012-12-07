@@ -83,15 +83,12 @@ forkret(void) {
 }
 
 int
-kernel_execve(const char *name, const char **argv) {
-    int argc = 0, ret;
-    while (argv[argc] != NULL) {
-        argc ++;
-    }
+kernel_execve(const char *name, const char **argv, const char **kenvp) {
+    int ret;
     asm volatile (
         "int %1;"
         : "=a" (ret)
-        : "i" (T_SYSCALL), "0" (SYS_exec), "D" (name), "S" (argc), "d" (argv)
+        : "i" (T_SYSCALL), "0" (SYS_exec), "D" (name), "S" (argv), "d" (kenvp)
         : "memory");
     return ret;
 }
@@ -99,7 +96,8 @@ kernel_execve(const char *name, const char **argv) {
 #define current (pls_read(current))
 
 int
-init_new_context (struct proc_struct *proc, struct elfhdr *elf, int argc, char** kargv) {
+init_new_context (struct proc_struct *proc, struct elfhdr *elf,
+		  int argc, char** kargv, int envc, char **kenvp) {
     uintptr_t stacktop = USTACKTOP - argc * PGSIZE;
     char **uargv = (char **)(stacktop - argc * sizeof(char *));
     int i;
@@ -135,6 +133,12 @@ cpu_idle(void) {
 int
 do_execve_arch_hook (int argc, char** kargv) {
 	return 0;
+}
+
+int
+ucore_kernel_thread(int (*fn)(void *), void *arg, uint32_t clone_flags)
+{
+       kernel_thread(fn, arg, clone_flags);
 }
 
 void

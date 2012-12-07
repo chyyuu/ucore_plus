@@ -1,0 +1,1 @@
+obj-y := clock.o entry.o kio.o mp.o pmm.o trap.o trapentry.o

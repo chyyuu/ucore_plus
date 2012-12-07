@@ -49,6 +49,17 @@
    void check_pgfault(void);
    */
 
+
+#ifndef UCONFIG_HEAP_SLOB
+#define __CHECK_MEMORY_LEAK() do{ \
+  assert(nr_used_pages_store == nr_used_pages());   \
+  assert(slab_allocated_store == slab_allocated()); \
+  }while(0);
+
+#else
+#define __CHECK_MEMORY_LEAK() 
+#endif
+
 static void check_vmm(void);
 static void check_vma_struct(void);
 static void check_pgfault(void);
@@ -715,8 +726,7 @@ check_vmm(void) {
   check_vma_struct();
   check_pgfault();
 
-  assert(nr_used_pages_store == nr_used_pages());
-  assert(slab_allocated_store == slab_allocated());
+  __CHECK_MEMORY_LEAK();
 
   kprintf("check_vmm() succeeded.\n");
 }
@@ -764,9 +774,8 @@ check_vma_struct(void) {
   }
 
   mm_destroy(mm);
-
-  assert(nr_used_pages_store == nr_used_pages());
-  assert(slab_allocated_store == slab_allocated());
+  
+  __CHECK_MEMORY_LEAK();
 
   kprintf("check_vma_struct() succeeded!\n");
 }

@@ -1,0 +1,30 @@
+#
+# Toolchain setup
+#
+CROSS_COMPILE=""
+ADDITIONAL_CFLAGS=""
+ADDITIONAL_LDFLAGS=""
+
+#
+# Memory Management
+#
+SWAP=y
+
+#
+# Schedule
+#
+# SCHEDULER_RR is not set
+SCHEDULER_MLFQ=y
+
+#
+# Filesystem
+#
+HAVE_SFS=y
+SFS_IMAGE_SIZE=128
+# HAVE_YAFFS2 is not set
+# HAVE_FATFS is not set
+
+#
+# Linux Device Driver Environment
+#
+# HAVE_LINUX_DDE_BASE is not set

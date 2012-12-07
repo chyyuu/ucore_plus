@@ -8,7 +8,7 @@ SECTIONS {
 
 	. = KERNEL_BASE;
 
-	.bootinfo : { *bootinfo.S.o(.*) }
+	.bootinfo : { *bootinfo.o(.*) }
 
 	. = ALIGN(0x1000);
 	PROVIDE(__kern_text_start = .);

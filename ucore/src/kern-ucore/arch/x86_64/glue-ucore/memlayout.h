@@ -29,6 +29,7 @@ struct Page {
 #define PG_dirty                    3       // the page has been modified
 #define PG_swap                     4       // the page is in the active or inactive page list (and swap hash table)
 #define PG_active                   5       // the page is in the active page list
+#define PG_IO                       6       // dma page, never free in unmap_page
 
 #define SetPageReserved(page)       set_bit(PG_reserved, &((page)->flags))
 #define ClearPageReserved(page)     clear_bit(PG_reserved, &((page)->flags))
@@ -48,6 +49,9 @@ struct Page {
 #define SetPageActive(page)         set_bit(PG_active, &((page)->flags))
 #define ClearPageActive(page)       clear_bit(PG_active, &((page)->flags))
 #define PageActive(page)            test_bit(PG_active, &((page)->flags))
+#define SetPageIO(page)             set_bit(PG_IO, &((page)->flags))
+#define ClearPageIO(page)           clear_bit(PG_IO, &((page)->flags))
+#define PageIO(page)                test_bit(PG_IO, &((page)->flags))
 
 // convert list entry to page
 #define le2page(le, member)                 \
