@@ -132,6 +132,10 @@
 
 
 #ifdef __UCORE_64__
+#define elf_check_arch(x) \
+    ((x)->e_machine == EM_X86_64)
+
+
 
 /* file header */
 struct elfhdr {
@@ -163,6 +167,40 @@ struct proghdr {
     uint64_t p_memsz;
     uint64_t p_align;
 };
+
+struct secthdr {
+     uint32_t sh_name;
+     uint32_t sh_type;
+     uint64_t sh_flags;
+     uint64_t sh_addr;
+     uint64_t sh_offset;
+     uint64_t sh_size;
+     uint32_t sh_link;
+     uint32_t sh_info;
+     uint64_t sh_addralign;
+     uint64_t sh_entsize;
+};
+
+struct reloc_s {
+    uint64_t r_offset;         /* Location at which to apply the action */
+    uint64_t r_info;           /* index and type of relocation */
+};
+
+struct reloc_a_s {
+    uint64_t r_offset;         /* Location at which to apply the action */
+    uint64_t r_info;           /* index and type of relocation */
+    int64_t r_addend;          /* Constant addend used to compute value */
+};
+
+struct symtab_s {
+    uint32_t st_name;
+    uint8_t  st_info;
+    uint8_t  st_other;
+    uint16_t st_shndx;
+    uint64_t st_value;
+    uint64_t st_size;
+};
+
 
 #define GET_RELOC_SYM(i) ((i)>>32)
 #define GET_RELOC_TYPE(i) ((i)&0xffffffff)
@@ -248,7 +286,7 @@ struct reloc_s {
 struct reloc_a_s {
     uint32_t r_offset;         /* Location at which to apply the action */
     uint32_t r_info;           /* index and type of relocation */
-    uint32_t r_addend;          /* Constant addend used to compute value */
+    int32_t r_addend;          /* Constant addend used to compute value */
 };
 
 struct symtab_s {
