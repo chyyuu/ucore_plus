@@ -1182,27 +1182,5 @@ int module_finalize(const struct elfhdr *hdr,
 	return 0;
 }
 
-int (*add_func)(int x, int y);
-EXPORT_SYMBOL(add_func);
-
-void mod_init() {
-    add_func = NULL;
-    
-    // TODO: read mod dep file
-}
-
-int do_mod_add(int a, int b) {
-    int ret = 0;
-    if (add_func == NULL)
-        kprintf("module mod-add not loaded.\n");
-    else
-        ret = add_func(a, b);
-    return ret;
-}
-
-int do_mod_mul(int a, int b) {
-    return 0;
-}
-
 
 

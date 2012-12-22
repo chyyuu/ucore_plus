@@ -63,13 +63,11 @@
 #define SYS_linux_sigsuspend   148
 
 /* changlan */
-#define SYS_init_module     200
-#define SYS_cleanup_module  201
-#define SYS_list_module     202
-#define SYS_mod_add         210
-#define SYS_mod_mul         211
-#define SYS_mount           212
-#define SYS_umount			213
+#define SYS_init_module     150
+#define SYS_cleanup_module  151
+#define SYS_list_module     152
+#define SYS_mount           153
+#define SYS_umount			154
 
 
 /* SYS_fork flags */

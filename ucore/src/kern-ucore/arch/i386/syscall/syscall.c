@@ -348,20 +348,6 @@ sys_list_module(uint32_t arg[]) {
 }
 
 static uint32_t
-sys_mod_add(uint32_t arg[]) {
-    int a = (int)arg[0];
-    int b = (int)arg[1];
-    return do_mod_add(a, b);
-}
-
-static uint32_t
-sys_mod_mul(uint32_t arg[]) {
-    int a = (int)arg[0];
-    int b = (int)arg[1];
-    return do_mod_mul(a, b);
-}
-
-static uint32_t
 sys_mount(uint32_t arg[]) {
     const char *source = (const char *)arg[0];
     const char *target = (const char *)arg[1];
@@ -426,8 +412,6 @@ static uint32_t (*syscalls[])(uint32_t arg[]) = {
     [SYS_init_module]       sys_init_module,
     [SYS_cleanup_module]    sys_cleanup_module,
     [SYS_list_module]       sys_list_module,
-    [SYS_mod_add]           sys_mod_add,
-    [SYS_mod_mul]           sys_mod_mul,
     [SYS_mount]             sys_mount,
     [SYS_umount]            sys_umount
 };

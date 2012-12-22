@@ -65,8 +65,6 @@ int sys_mkfifo(const char *name, uint32_t open_flags);
 int sys_init_module(void __user *umod, unsigned long len, const char __user *uargs);
 int sys_cleanup_module(const char __user *name);
 int sys_list_module();
-int sys_mod_add(int, int);
-int sys_mod_mul(int, int);
 
 int sys_mount(const char *source, const char *target, const char* filesystemtype, const void *data);
 int sys_umount(const char *target);

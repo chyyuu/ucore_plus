@@ -252,16 +252,6 @@ sys_list_module() {
 }
 
 int 
-sys_mod_add(int a, int b) {
-    return syscall(SYS_mod_add, a, b);
-}
-
-int 
-sys_mod_mul(int a, int b) {
-    return syscall(SYS_mod_mul, a, b);
-}
-
-int 
 sys_mount(const char *source, const char *target, const char* filesystemtype, const void *data) {
     return syscall(SYS_mount, source, target, filesystemtype, data);
 }
@@ -412,8 +402,6 @@ _syscall3(int, linux_sigaction, int, sign, struct sigaction* ,act,struct sigacti
 _syscall0(int, list_module);
 _syscall3(int, init_module, void*, umod, unsigned long, len, const char *, uargs);
 _syscall1(int, cleanup_module, const char *, name);
-_syscall2(int, mod_add, int, a, int, b);
-_syscall2(int, mod_mul, int, a, int, b);
 _syscall4(int, mount, const char *, source, const char *, target, const char *, filesystemtype, const void *, data);
 _syscall1(int, umount, const char *, target);
 

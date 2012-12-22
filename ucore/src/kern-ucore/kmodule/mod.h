@@ -42,9 +42,6 @@ typedef void (*exitcall_t)(void);
 #define module_exit(x) __exitcall(x)
 
 
-#define MOD_ADD "module_func_add"
-#define MOD_MUL "module_func_mul"
-
 #ifndef MODULE_SYMBOL_PREFIX
 #define MODULE_SYMBOL_PREFIX ""
 #endif
