@@ -1,5 +1,5 @@
 SRCFILES	+= $(shell find arch/${ARCH} '(' '!' -regex '.*/_.*' ')' -and '(' -iname "*.c" -or -iname "*.S" ')' | sed -e 's!\./!!g')
-ARCH_DIRS	:= debug mm driver init libs sync process glue-ucore glue-ucore/libs syscall
+ARCH_DIRS	:= debug mm driver init libs sync process glue-ucore glue-ucore/libs syscall module
 T_CC_FLAGS	+= ${foreach dir,${ARCH_DIRS},-Iarch/${ARCH}/${dir}}
 
 LINK_FILE	:= arch/${ARCH}/ucore.ld

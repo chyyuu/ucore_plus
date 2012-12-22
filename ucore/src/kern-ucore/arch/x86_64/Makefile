@@ -1,1 +1,1 @@
-dirs-y := debug driver glue-ucore mm process syscall
+dirs-y := debug driver glue-ucore mm process syscall module

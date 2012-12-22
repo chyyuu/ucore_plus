@@ -262,8 +262,8 @@ sys_mod_mul(int a, int b) {
 }
 
 int 
-sys_mount(const char *source, const char *target, const char* filesystemtype, unsigned long mountflags, const void *data) {
-    return syscall(SYS_mount, source, target, filesystemtype, mountflags, data);
+sys_mount(const char *source, const char *target, const char* filesystemtype, const void *data) {
+    return syscall(SYS_mount, source, target, filesystemtype, data);
 }
 
 int 
@@ -414,7 +414,8 @@ _syscall3(int, init_module, void*, umod, unsigned long, len, const char *, uargs
 _syscall1(int, cleanup_module, const char *, name);
 _syscall2(int, mod_add, int, a, int, b);
 _syscall2(int, mod_mul, int, a, int, b);
-
+_syscall4(int, mount, const char *, source, const char *, target, const char *, filesystemtype, const void *, data);
+_syscall1(int, umount, const char *, target);
 
 int
 sys_send_event(int pid, int event, unsigned int timeout) {

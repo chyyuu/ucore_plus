@@ -30,7 +30,7 @@ main(int argc, char **argv) {
         return -1;
     }
     else {
-        ret = mount(argv[3], NULL, argv[2], 0, NULL);
+        ret = mount(argv[3], NULL, argv[2], NULL);
     }
 
     if (!ret) {

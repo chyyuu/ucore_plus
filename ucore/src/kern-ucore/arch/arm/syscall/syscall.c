@@ -383,8 +383,7 @@ sys_mount(uint32_t arg[]) {
     const char *source = (const char *)arg[0];
     const char *target = (const char *)arg[1];
     const char *filesystemtype = (const char *)arg[2];
-    unsigned long mountflags = (unsigned long)arg[3];
-    const void *data = (const void *)arg[4];
+    const void *data = (const void *)arg[3];
     return do_mount(source, filesystemtype);
 }
 
