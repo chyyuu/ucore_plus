@@ -102,7 +102,7 @@ static void set_license(struct module *mod, const char *license)
 {
 	if (!license)
 		license = "unspecified";
-	// TODO: don't care!
+	// TODO: the feature is left for future use.
 }
 
 
@@ -819,16 +819,12 @@ static noinline struct module *load_module(void __user *umod, unsigned long len,
 		goto free_hdr;
 	} else if (!same_magic(modmagic, vermagic, versindex)) {
 		; 
-		// we do not fucking care version magic
+		// TODO: module magic is left for future use.
 	}
     */
 
 	staging = get_modinfo(sechdrs, infoindex, "staging");
-	if (staging) {
-		// we do not fucking care taint or nor
-	}
-
-	// we do not fucking care arg either
+	// TODO: staging is left for future use.
 
 	if (find_module(mod->name)) {
 		kprintf("load_module: module %s exists\n", mod->name);
@@ -837,16 +833,14 @@ static noinline struct module *load_module(void __user *umod, unsigned long len,
 
 	mod->state = MODULE_STATE_COMING;
 
-	//err = module_frob_arch_sections(hdr, sechdrs, secstrings, mod);
-	// we do not need it for x86
+	// err = module_frob_arch_sections(hdr, sechdrs, secstrings, mod);
+	// TODO: we do not need it for x86 or arm
 
-	// we do not care percpu
+	// TODO: percpu is no longer needed.
 	
 	layout_sections(mod, hdr, sechdrs, secstrings);
 
 	ptr = module_alloc_update_bounds(mod->core_size);
-
-	// dont care memleak for now
 
 	if (!ptr) {
 		goto free_percpu;
@@ -856,7 +850,6 @@ static noinline struct module *load_module(void __user *umod, unsigned long len,
 
 	ptr = module_alloc_update_bounds(mod->init_size);
 
-	// dont care memleak for now
 	if (!ptr && mod->init_size) {
 		goto free_core;
 	}
@@ -881,26 +874,12 @@ static noinline struct module *load_module(void __user *umod, unsigned long len,
 	}
 	/* Module has been moved. */
 	mod = (void *)sechdrs[modindex].sh_addr;
-	
-	// dont care memleak for now
 
 	/* Now we've moved module, initialize linked lists, etc. */
 	module_unload_init(mod);
 
-	// dont care fucking kobject
-
 	/* Set up license info based on the info section */
 	set_license(mod, get_modinfo(sechdrs, infoindex, "license"));
-
-	// again, who care?
-	/*
-	if (strcmp(mod->name, "ndiswrapper") == 0)
-		add_taint(TAINT_PROPRIETARY_MODULE);
-	if (strcmp(mod->name, "driverloader") == 0)
-		add_taint_module(mod, TAINT_PROPRIETARY_MODULE);
-	
-	setup_modinfo(mod, sechdrs, infoindex);
-	*/
 
 	err = simplify_symbols(sechdrs, symindex, strtab, versindex, pcpuindex,
 							mod);
@@ -917,7 +896,7 @@ static noinline struct module *load_module(void __user *umod, unsigned long len,
 		const char *strtab = (char *)sechdrs[strindex].sh_addr;
 		unsigned int info = sechdrs[i].sh_info;
 
-		/* Not a valid relocation section? */
+		/* Not a valid relocation section */
 		if (info >= hdr->e_shnum)
 			continue;
 
@@ -938,6 +917,7 @@ static noinline struct module *load_module(void __user *umod, unsigned long len,
 	if (err < 0)
 		goto cleanup;
 
+    // TODO: kallsyms is left for future use.
 	//add_kallsyms(mod, sechdrs, symindex, strindex, secstrings);
 
 	err = module_finalize(hdr, sechdrs, mod);
@@ -961,7 +941,6 @@ free_core:
 free_percpu:	
 
 free_mod:
-	// dont care args
 
 free_hdr:
 	kfree(hdr);
@@ -976,23 +955,23 @@ int do_init_module(void __user *umod, unsigned long len, const char __user *uarg
     struct module *mod;
 	int ret = 0;
 
-	// TODO: lock module mutex
+	// TODO: non-preemptive kernel does not need to lock module mutex
 
 	mod = load_module(umod, len, uargs);
     if (mod == NULL) {
-        // unlock module mutex
+        // TODO: non-preemptive kernel does not need to unlock module mutex
         return -1;
     }
 
-	// TODO: unlock module mutex
+	// TODO: non-preemptive kernel does not need to unlock module mutex
 	
     if (mod->init != NULL)
 		ret = (*mod->init)();
 	if (ret < 0) {
 		mod->state = MODULE_STATE_GOING;
-		// TODO: lock module mutex
+		// TODO: non-preemptive kernel does not need to lock module mutex
 		free_module(mod);
-		// TODO: unlock
+		// TODO: non-preemptive kernel does not need to unlock
 		return ret;
 	}
 	if (ret > 0) {
@@ -1001,7 +980,7 @@ int do_init_module(void __user *umod, unsigned long len, const char __user *uarg
 	}
 	mod->state = MODULE_STATE_LIVE;
 
-	// TODO: lock module mutex
+	// TODO: lock?
 	module_free(mod, mod->module_init);
 	mod->module_init = NULL;
 	mod->init_size = 0;
