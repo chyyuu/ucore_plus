@@ -6,7 +6,17 @@ DEPS := $(addprefix $(OBJPATH)/, $(obj-y:.o=.d))
 BUILTIN_O := $(OBJPATH)/builtin.o
 OBJ_Y := $(addprefix $(OBJPATH)/,$(obj-y))
 
-all: $(OBJPATH) $(BUILTIN_O) $(dirs-y) FORCE
+all: $(OBJPATH) $(BUILTIN_O) $(dirs-y) __modules FORCE
+#modules
+ifneq ($(obj-m),)
+$(obj-m:.o=): $(addprefix $(OBJPATH)/,$(obj-$(obj-m:.o=)))
+	$(Q)mkdir -p $(OBJPATH_ROOT)/modules
+	$(Q)cp $@.dep $(OBJPATH_ROOT)/modules/$@.dep
+	$(Q)$(TARGET_LD) $(TARGET_LDFLAGS) -r -o $(OBJPATH_ROOT)/modules/$@.ko $+
+KERNEL_MODULES +=$(obj-m:.o=)
+endif
+__modules: $(KERNEL_MODULES)
+
 ifneq ($(obj-y),)
 	$(Q)echo $(BUILTIN_O) >> $(BUILTINLIST)
 endif

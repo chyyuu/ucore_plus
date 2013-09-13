@@ -71,6 +71,9 @@ int sys_mount(const char *source, const char *target,
 	      const char *filesystemtype, const void *data);
 int sys_umount(const char *target);
 
+int sys_mod_add(int, int);
+int sys_mod_mul(int, int);
+
 int sys_ioctl(int d, int request, unsigned long data);
 
 void *sys_linux_mmap(void *addr, size_t length, int fd, size_t offset);

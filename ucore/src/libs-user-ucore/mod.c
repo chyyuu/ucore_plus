@@ -12,3 +12,8 @@ int cleanup_module(const char __user * name)
 {
 	return sys_cleanup_module(name);
 }
+
+int query_module(const char * name)
+{
+	return sys_query_module(name);
+}

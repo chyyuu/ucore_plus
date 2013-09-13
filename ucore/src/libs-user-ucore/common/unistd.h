@@ -68,12 +68,17 @@
 #define SYS_list_module     152
 #define SYS_mount           153
 #define SYS_umount			154
+//xieyilun
+#define SYS_query_module     155
 
 /* liucong 20121109 */
 #define SYS_rf212           199
 
 /* chy: halt system*/
 #define SYS_halt            201
+
+#define SYS_mod_add         202
+#define SYS_mod_mul         203
 
 /* SYS_fork flags */
 #define CLONE_VM             0x00000100

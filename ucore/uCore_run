@@ -93,6 +93,8 @@ case $UCONFIG_ARCH in
         exec $QEMU -m 128 \
             -hda $BUILD_DIR/kernel.img$TEST_POSTFIX \
             -drive file=$BUILD_DIR/sfs.img$TEST_POSTFIX,media=disk,cache=writeback,index=2 \
+	    -drive file=$BUILD_DIR/fat.img$TEST_POSTFIX,media=disk,cache=writeback,index=3 \
+            -s -serial file:$BUILD_DIR/serial.log$TEST_POSTFIX \
             $EXTRA_OPT
         ;;
     amd64)

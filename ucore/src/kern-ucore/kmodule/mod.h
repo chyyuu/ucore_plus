@@ -41,6 +41,9 @@ typedef void (*exitcall_t) (void);
 #define module_init(x) __initcall(x)
 #define module_exit(x) __exitcall(x)
 
+#define MOD_ADD "module_func_add"
+#define MOD_MUL "module_func_mul"
+
 #ifndef MODULE_SYMBOL_PREFIX
 #define MODULE_SYMBOL_PREFIX ""
 #endif
@@ -162,10 +165,10 @@ static inline int module_is_live(struct module *mod)
 	return mod->state != MODULE_STATE_GOING;
 }
 
-struct module *__module_text_address(unsigned long addr);
-struct module *__module_address(unsigned long addr);
-bool is_module_address(unsigned long addr);
-bool is_module_text_address(unsigned long addr);
+//struct module *__module_text_address(unsigned long addr);
+//struct module *__module_address(unsigned long addr);
+//bool is_module_address(unsigned long addr);
+//bool is_module_text_address(unsigned long addr);
 
 static inline int within_module_core(unsigned long addr, struct module *mod)
 {
@@ -197,22 +200,22 @@ bool each_symbol(bool(*fn)
 		  (const struct symsearch * arr, struct module * owner,
 		   unsigned int symnum, void *data), void *data);
 
-int module_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
-		       char *name, char *module_name, int *exported);
+//int module_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+//		       char *name, char *module_name, int *exported);
 
-unsigned long module_kallsyms_lookup_name(const char *name);
+//unsigned long module_kallsyms_lookup_name(const char *name);
 
-int module_kallsyms_on_each_symbol(int (*fn)
+/*int module_kallsyms_on_each_symbol(int (*fn)
 				    (void *, const char *, struct module *,
 				     unsigned long), void *data);
-
+*/
 // TODO: SMP?
-extern void __module_put_and_exit(struct module *mod, long code);
-#define module_put_and_exit(code) __module_put_and_exit(THIS_MODULE, code)
+//extern void __module_put_and_exit(struct module *mod, long code);
+//#define module_put_and_exit(code) __module_put_and_exit(THIS_MODULE, code)
 
 // TODO: UNLOAD
 // START
-unsigned int module_refcount(struct module *mod);
+//unsigned int module_refcount(struct module *mod);
 
 static inline atomic_t *__module_ref_addr(struct module *mod, int cpu)
 {

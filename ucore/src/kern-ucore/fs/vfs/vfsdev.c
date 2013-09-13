@@ -290,8 +290,8 @@ static int find_mount(const char *devname, vfs_dev_t ** vdev_store)
  * Mount a filesystem. Once we've found the device, call MOUNTFUNC to
  * set up the filesystem and hand back a struct fs.
  */
-int
-vfs_mount(const char *devname,
+EXPORT_SYMBOL(vfs_mount);
+int vfs_mount(const char *devname,
 	  int (*mountfunc) (struct device * dev, struct fs ** fs_store))
 {
 	int ret;

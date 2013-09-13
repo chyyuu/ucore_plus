@@ -347,6 +347,12 @@ static uint32_t sys_list_module(uint32_t arg[])
 	return 0;
 }
 
+static uint32_t sys_query_module(uint32_t arg[])
+{
+	const char* name=(const char*)arg[0];
+	return find_module(name);
+}
+
 static uint32_t sys_mount(uint32_t arg[])
 {
 	const char *source = (const char *)arg[0];
@@ -360,6 +366,22 @@ static uint32_t sys_umount(uint32_t arg[])
 {
 	const char *target = (const char *)arg[0];
 	return do_umount(target);
+}
+
+static uint32_t
+sys_mod_add(uint32_t arg[])
+{
+	int a = (int)arg[0];
+	int b = (int)arg[1];
+	return do_mod_add(a, b);
+}
+
+static uint32_t
+sys_mod_mul(uint32_t arg[])
+{
+	int a = (int)arg[0];
+	int b = (int)arg[1];
+	return do_mod_mul(a, b);
 }
 
 static uint32_t(*syscalls[]) (uint32_t arg[]) = {
@@ -412,7 +434,11 @@ static uint32_t(*syscalls[]) (uint32_t arg[]) = {
 	    [SYS_init_module] sys_init_module,
 	    [SYS_cleanup_module] sys_cleanup_module,
 	    [SYS_list_module] sys_list_module,
-	    [SYS_mount] sys_mount,[SYS_umount] sys_umount};
+		[SYS_query_module] sys_query_module,
+	    [SYS_mount] sys_mount,[SYS_umount] sys_umount,
+	    [SYS_mod_add] sys_mod_add,
+	    [SYS_mod_mul] sys_mod_mul
+};
 
 #define NUM_SYSCALLS        ((sizeof(syscalls)) / (sizeof(syscalls[0])))
 

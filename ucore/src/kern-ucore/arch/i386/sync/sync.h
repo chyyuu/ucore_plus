@@ -24,6 +24,16 @@ static inline void __intr_restore(bool flag)
 	}
 }
 
+static inline bool mod_init_save(void) 
+{
+	return __intr_save();
+}
+ 
+static inline void mod_init_restore(bool flag)
+{
+	return __intr_restore(flag);
+}
+
 #define local_intr_save(x)      do { x = __intr_save(); } while (0)
 #define local_intr_restore(x)   __intr_restore(x);
 

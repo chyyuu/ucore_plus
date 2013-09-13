@@ -71,6 +71,7 @@ void load_mod(const char *name)
 
 void load(const char *name, int size)
 {
+	load_dep(name);
 	if (in_short(name, size)) {
 		snprintf(path, size + KERN_MODULE_ADDITIONAL_LEN + 1,
 			 KERN_MODULE_PREFIX "%s" KERN_MODULE_SUFFIX, name);
@@ -81,10 +82,11 @@ void load(const char *name, int size)
 	}
 }
 
-/**
- * return handled or not
- * 
- */
+/*
+ return handled or not
+ *.dep内容：
+	模块名:依赖模块1 依赖模块2...
+
 int handle_dep(const char *line, const char *name)
 {
 	int name_len = strlen(name);
@@ -117,32 +119,35 @@ int handle_dep(const char *line, const char *name)
 		i = j + 1;
 	}
 	return 1;
-}
+}*/
 
-void load_dep(const char *name)
+int load_dep(const char *name)
 {
 	char buffer[1024];
-	int fd = open(KERN_MODULE_DEP, O_RDONLY);
+	char path[1024];
+	int size=strlen(name);
+	cprintf("load_dep\n");
+	snprintf(path, size + KERN_MODULE_ADDITIONAL_LEN + 5,
+			 KERN_MODULE_PREFIX "%s.dep", name);
+	cprintf("%s\n",path);
+	int fd = open(path, O_RDONLY);
 	int s = 0;
 	int p = 0;
 	char c;
 	while ((s = read(fd, &c, sizeof(char))) >= 0) {
-		if (s == 0 || c == '\n' || c == '\r') {
+		if (s == 0 || c==' ' || c == '\n' || c == '\r') {
 			buffer[p] = '\0';
-			if (p > 0) {
-				int handled = handle_dep(buffer, name);
-				if (handled) {
-					return;
-				}
+			if (p > 0 && !query_module(buffer)) {
+				cprintf("%s\n",buffer);
+				load(buffer, strlen(buffer));
 			}
 			p = 0;
-		} else {
-			buffer[p++] = c;
 		}
-		if (s == 0) {
+		else buffer[p++] = c;
+		if (s == 0)
 			break;
 		}
-	}
+	return 1;
 }
 
 int main(int argc, char **argv)
@@ -151,8 +156,6 @@ int main(int argc, char **argv)
 		write(1, USAGE, strlen(USAGE));
 		return 0;
 	}
-	char *short_name = get_short_name(argv[1]);
-	load_dep(short_name);
 	load(argv[1], strlen(argv[1]));
 	return 0;
 }

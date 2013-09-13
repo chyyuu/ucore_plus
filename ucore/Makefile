@@ -138,10 +138,16 @@ $(TOOLS_MKSFS): | $(OBJPATH_ROOT)
 	$(Q)$(MAKE) CC=$(HOSTCC) -f $(TOOLS_MKSFS_DIR)/Makefile -C $(TOOLS_MKSFS_DIR) all
 
 ## image
+FATIMG_FILE := $(OBJPATH_ROOT)/fat.img
 SFSIMG_LINK := $(OBJPATH_ROOT)/sfs.img
 SFSIMG_FILE := $(OBJPATH_ROOT)/sfs-orig.img
 TMPSFS := $(OBJPATH_ROOT)/.tmpsfs
 sfsimg: $(SFSIMG_LINK)
+
+fatimg: | $(OBJPATH_ROOT)
+	@@rm -f $(FATIMG_FILE)
+	@dd if=/dev/zero of=$(FATIMG_FILE) bs=1M count=128 >/dev/null 2>&1
+	@mkfs -t vfat $(FATIMG_FILE)
 
 $(SFSIMG_LINK): $(SFSIMG_FILE)
 	@ln -sf sfs-orig.img $@
@@ -151,6 +157,7 @@ $(SFSIMG_FILE): $(TOOLS_MKSFS) userlib userapp FORCE | $(OBJPATH_ROOT)
 	@rm -rf $(TMPSFS)
 	@mkdir -p $(TMPSFS)
 	@mkdir -p $(TMPSFS)/lib/modules
+	@cp -r $(OBJPATH_ROOT)/modules $(TMPSFS)/lib
 	@cp -r $(OBJPATH_ROOT)/user-ucore/bin $(TMPSFS)
 ifneq ($(UCORE_TEST),)
 	@cp -r $(OBJPATH_ROOT)/user-ucore/testbin $(TMPSFS)
