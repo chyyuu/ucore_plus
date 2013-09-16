@@ -1081,35 +1081,11 @@ int module_finalize(const struct elfhdr *hdr,
 	return 0;
 }
 
-int (*add_func)(int x, int y);
-int (*mul_func)(int x, int y);
-EXPORT_SYMBOL(add_func);
-EXPORT_SYMBOL(mul_func);
-
 void mod_init()
 {
-	add_func = NULL;
-	mul_func = NULL;
-	// TODO: read mod dep file
 }
 
-int do_mod_add(int a, int b) {
-	int ret = 0;
-	if (add_func == NULL)
-		kprintf("module mod-add not loaded.\n");
-	else
-		ret = add_func(a, b);
-	return ret;
-}
 
-int do_mod_mul(int a, int b) {
-	int ret = 0;
-	if (mul_func == NULL)
-		kprintf("module mod-mul not loaded.\n");
-	else
-		ret = mul_func(a, b);
-	return ret;
-}
 EXPORT_SYMBOL(hash32);
 EXPORT_SYMBOL(strlen);
 EXPORT_SYMBOL(strchr);
