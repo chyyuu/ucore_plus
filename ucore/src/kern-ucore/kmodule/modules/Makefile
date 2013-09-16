@@ -1,1 +1,1 @@
-dirs-y :=mod-ffs
+dirs-y :=
