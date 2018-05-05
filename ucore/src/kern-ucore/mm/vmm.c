@@ -19,9 +19,9 @@
 
 #define false	(0)
 
-/* 
+/*
    vmm design include two parts: mm_struct (mm) & vma_struct (vma)
-   mm is the memory manager for the set of continuous virtual memory  
+   mm is the memory manager for the set of continuous virtual memory
    area which have the same PDT. vma is a continuous virtual memory area.
    There a linear link list for vma & a redblack link list for vma in mm.
    ---------------
@@ -38,7 +38,7 @@
    struct vma_struct * find_vma(struct mm_struct *mm, uintptr_t addr)
    local functions
    inline void check_vma_overlap(struct vma_struct *prev, struct vma_struct *next)
-   inline struct vma_struct * find_vma_rb(rb_tree *tree, uintptr_t addr) 
+   inline struct vma_struct * find_vma_rb(rb_tree *tree, uintptr_t addr)
    inline void insert_vma_rb(rb_tree *tree, struct vma_struct *vma, ....
    inline int vma_compare(rb_node *node1, rb_node *node2)
    ---------------
@@ -164,7 +164,7 @@ static inline struct vma_struct *find_vma_rb(rb_tree * tree, uintptr_t addr)
 		}
 	}
 #if 0
-    if (vma!=NULL) 
+    if (vma!=NULL)
       kprintf("  find_vma_rb end:: addr %d, vma %x, start %d, end %d\n",addr, vma, vma->vm_start, vma->vm_end);
     else
       kprintf("  find_vma_rb end:: vma is NULL\n");
@@ -894,8 +894,8 @@ int do_pgfault(struct mm_struct *mm, machine_word_t error_code, uintptr_t addr)
 {
 	if (mm == NULL) {
 		assert(current != NULL);
-		/* Chen Yuheng 
-		 * give handler a chance to deal with it 
+		/* Chen Yuheng
+		 * give handler a chance to deal with it
 		 */
 		kprintf
 		    ("page fault in kernel thread: pid = %d, name = %s, %d %08x.\n",
@@ -1052,7 +1052,7 @@ int do_pgfault(struct mm_struct *mm, machine_word_t error_code, uintptr_t addr)
 			}
 			unlock_shmem(vma->shmem);
 			if (ptep_present(sh_ptep)) {
-				page_insert(mm->pgdir, pa2page(*sh_ptep), addr,
+				page_insert(mm->pgdir, pte2page(*sh_ptep), addr,
 					    perm);
 			} else {
 #ifdef UCONFIG_SWAP
@@ -1063,7 +1063,7 @@ int do_pgfault(struct mm_struct *mm, machine_word_t error_code, uintptr_t addr)
 #endif
 			}
 		}
-	} else {		//a present page, handle copy-on-write (cow) 
+	} else {		//a present page, handle copy-on-write (cow)
 		struct Page *page, *newpage = NULL;
 		bool cow =
 		    ((vma->vm_flags & (VM_SHARE | VM_WRITE)) == VM_WRITE),
